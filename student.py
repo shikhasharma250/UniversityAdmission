@@ -1,16 +1,5 @@
-#Statement: A university wants to automate their admission process. Students are admitted based on the marks scored in the qualifying exam. A student is identified by student id, age and marks in qualifying exam. Data are valid, if:
-
-#Age is greater than 20
-#Marks is between 0 and 100 (both inclusive)
-#A student qualifies for admission, if
-
-#age and marks are valid and
-#Marks is 65 or more
-#Write a python program to represent the students seeking admission in the university. The details of student class are given below.
-
-
 class Student:
-    def __init__(self, name,student_id, marks, age):
+    def __init__(self, name, student_id, marks, age):
         self.__name = name
         self.__student_id = student_id
         self.__marks = marks
@@ -18,36 +7,40 @@ class Student:
 
     def get__marks(self):
         return self.__marks
-    def set__marks(self,new_marks):
-        if new_marks == int:
-            return new_marks
-        else :
-            return "invalid data "
 
+    def set__marks(self, new_marks):
+        if isinstance(new_marks, (int, float)):  # ✅ correct type check
+            self.__marks = new_marks
+        else:
+            print("Invalid data")
 
     def validate_marks(self):
+        # ✅ Guard against non-numeric marks like "hehe"
+        if not isinstance(self.__marks, (int, float)):
+            return False
         return 0 <= self.__marks <= 100
-        
+
     def validate_age(self):
-       return self.__age > 20
+        # ✅ Guard against non-numeric age
+        if not isinstance(self.__age, (int, float)):
+            return False
+        return self.__age > 20
 
     def check_qualification(self):
-        if self.validate_age() and self.validate_marks() and self.__marks >= 65:
-            print("qualified")
+        # ✅ Check validity first, then qualification threshold
+        if not self.validate_marks() or not self.validate_age():
+            print(f"{self.__name}: Invalid data")
+        elif self.__marks >= 65:
+            print(f"{self.__name}: Qualified")
         else:
-            print("not qualified")
+            print(f"{self.__name}: Not qualified")
 
 
-S1 = Student("shikha",101,70,20)
-S1.check_qualification()
+S1 = Student("Shikha", 101, 70, 20)
+S1.check_qualification()   # age=20, not > 20 → Not qualified
 
-S2 = Student("suniti",102,80,21)
-S2.check_qualification()
+S2 = Student("Suniti", 102, 80, 21)
+S2.check_qualification()   # age=21, marks=80 ✅ → Qualified
 
-S3 = Student("tanish",103,"hehe",20)
-S3.check_qualification()
-
-
-
-
-        
+S3 = Student("Tanish", 103, "hehe", 20)
+S3.check_qualification()   # marks="hehe" → Invalid data
